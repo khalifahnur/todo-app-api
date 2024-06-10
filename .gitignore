@@ -1,0 +1,14 @@
+# Ignore node_modules in the root and all subdirectories
+node_modules/
+
+# Ignore package-lock.json in the root
+package-lock.json
+
+# Ignore node_modules and package-lock.json in the api folder
+/api/node_modules/
+/api/package-lock.json
+
+# Ignore environment variable files
+.env
+.vercel
+
