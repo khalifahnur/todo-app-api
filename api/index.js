@@ -38,15 +38,39 @@ app.get("/", async (req, res) => {
   res.send("Server is running");
 });
 
+// app.post("/login", async (req, res) => {
+//   const { idToken } = req.body;
+//   console.log(req.body);
+//   try {
+//     const decodedToken = await firebaseAdmin.auth().verifyIdToken(idToken);
+//     const uid = decodedToken.uid;
+//     res.status(200).json({ uid });
+//   } catch (e) {
+//     console.log("Error verifying ID token:", e);
+//     res.status(400).json({ error: "Invalid ID token" });
+//   }
+// });
+
+
 app.post("/login", async (req, res) => {
   const { idToken } = req.body;
-  console.log(req.body);
   try {
-    const decodedToken = await firebaseAdmin.auth().verifyIdToken(idToken);
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
     const uid = decodedToken.uid;
-    res.status(200).json({ uid });
-  } catch (e) {
-    console.log("Error verifying ID token:", e);
+    const db = admin.firestore();
+    const userRef = db.collection('users').doc(uid); 
+
+    // Check if the user exists
+    const userSnapshot = await userRef.get();
+    if (userSnapshot.exists) {
+      // User exists, send a success response
+      res.status(200).json({ uid });
+    } else {
+      // User doesn't exist, send an error
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    console.error("Error verifying ID token:", error);
     res.status(400).json({ error: "Invalid ID token" });
   }
 });
