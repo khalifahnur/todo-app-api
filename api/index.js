@@ -58,7 +58,7 @@ app.post("/login", async (req, res) => {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const uid = decodedToken.uid;
     const db = admin.firestore();
-    const userRef = db.collection('users').doc(uid); 
+    const userRef = db.collection('user').doc(uid); 
 
     // Check if the user exists
     const userSnapshot = await userRef.get();
